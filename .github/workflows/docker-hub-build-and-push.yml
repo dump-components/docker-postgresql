@@ -20,7 +20,6 @@ jobs:
       - name: Set env
         run: |
           echo "POSTGRESQL_VERSION=$(cut -d '/' -f 2 <<< "${GITHUB_REF#refs/*/}")" >> $GITHUB_ENV
-          echo "OS_VERSION=$(cut -d '/' -f 1 <<< "${GITHUB_REF#refs/*/}")" >> $GITHUB_ENV
           echo "IMAGE_NAME=$(cut -d '/' -f 1 <<< "${GITHUB_REF#refs/*/}")" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
@@ -38,26 +37,26 @@ jobs:
       - name: Build and push Docker image | BASE
         uses: docker/build-push-action@v3
         with:
-          context: ./Dockerfiles/${{ env.POSTGRESQL_VERSION }}-${{ env.OS_VERSION }}/base/
+          context: ./Dockerfiles/${{ env.POSTGRESQL_VERSION }}/base/
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:base-${{ env.POSTGRESQL_VERSION }}-${{ env.OS_VERSION }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:base-${{ env.POSTGRESQL_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push Docker image | DEV
         uses: docker/build-push-action@v3
         with:
-          context: ./Dockerfiles/${{ env.POSTGRESQL_VERSION }}-${{ env.OS_VERSION }}/dev/
+          context: ./Dockerfiles/${{ env.POSTGRESQL_VERSION }}/dev/
           push: true
           labels: ${{ steps.meta.outputs.labels }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:dev-${{ env.POSTGRESQL_VERSION }}-${{ env.OS_VERSION }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:dev-${{ env.POSTGRESQL_VERSION }}
 
       - name: Build and push Docker image | PROD
         uses: docker/build-push-action@v3
         with:
-          context: ./Dockerfiles/${{ env.POSTGRESQL_VERSION }}-${{ env.OS_VERSION }}/prod/
+          context: ./Dockerfiles/${{ env.POSTGRESQL_VERSION }}/prod/
           push: true
           labels: prod-${{ steps.meta.outputs.labels }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:prod-${{ env.POSTGRESQL_VERSION }}-${{ env.OS_VERSION }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:prod-${{ env.POSTGRESQL_VERSION }}
