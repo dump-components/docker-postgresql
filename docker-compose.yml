@@ -1,0 +1,26 @@
+version: "4.0"
+
+services:
+
+      database:
+        image: dumptec/postgresql:dev-16.0-alpine3.18
+        hostname: database
+        container_name: database
+        environment:
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_DATABASE}
+            - PGDATA=/var/lib/postgresql/data/pgdata
+            - PGTZ=${TIMEZONE}
+            - TZ=${TIMEZONE}
+        ports:
+            - "5432:5432"
+        restart: "no"
+        volumes:
+            - ./dbdata:/var/lib/postgresql/data/pgdata
+            - ./docker/database/postgresql.conf:/usr/local/share/postgresql/postgresql.conf.sample:ro
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
