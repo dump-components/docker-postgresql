@@ -1,4 +1,4 @@
-# Postgresqk
+# Postgresql
 
 ## User
 
